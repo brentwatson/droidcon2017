@@ -12,6 +12,7 @@ import org.jetbrains.ktor.netty.*
 import org.jetbrains.ktor.request.receiveText
 import org.jetbrains.ktor.response.*
 import org.jetbrains.ktor.routing.*
+import org.jetbrains.ktor.util.raw
 import java.io.File
 
 fun main(args: Array<String>) {
@@ -21,11 +22,12 @@ fun main(args: Array<String>) {
             get("/") {
                 call.respondText(createHTML(prettyPrint = true)
                         .body {
+                            h1 { +"Draw Submissions" }
+                            div { id = "submissions" }
                             script(type = "text/javascript", src = "js/kotlin.js")
+                            script(type = "text/javascript", src = "js/kotlinx-html-js.js")
                             script(type = "text/javascript", src = "js/frontend_main.js")
-                    h1 { +"Draw Submissions" }
-                }, ContentType.Text.Html)
-
+                        }, ContentType.Text.Html)
             }
             post("/info") {
                 val json = call.receiveText()
@@ -34,9 +36,6 @@ fun main(args: Array<String>) {
                 call.respondText("OK\n")
             }
             get("/all") {
-                call.respond(gson.toJson(DataStore.cache))
-            }
-            get("/admin") {
                 call.respond(gson.toJson(DataStore.cache))
             }
             static("js") {
