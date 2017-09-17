@@ -28,6 +28,7 @@ hs_err_pid*
 build/
 .gradle/
 out/
+project/frontend/web/
 
 # IDE files
 .idea/
