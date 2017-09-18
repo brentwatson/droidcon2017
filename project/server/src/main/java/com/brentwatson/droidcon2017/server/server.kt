@@ -1,14 +1,13 @@
 import com.brentwatson.droidcon2017.server.DataStore
 import com.brentwatson.droidcon2017.server.Person
 import com.google.gson.Gson
-import org.jetbrains.ktor.content.files
-import org.jetbrains.ktor.content.static
-import org.jetbrains.ktor.content.staticRootFolder
 import org.jetbrains.ktor.host.*
 import kotlinx.html.*
 import kotlinx.html.stream.createHTML
+import org.jetbrains.ktor.content.*
 import org.jetbrains.ktor.http.ContentType
 import org.jetbrains.ktor.netty.*
+import org.jetbrains.ktor.request.receiveParameters
 import org.jetbrains.ktor.request.receiveText
 import org.jetbrains.ktor.response.*
 import org.jetbrains.ktor.routing.*
@@ -19,7 +18,24 @@ fun main(args: Array<String>) {
     val gson = Gson()
     val server = embeddedServer(Netty, port = 8080) {
         routing {
-            get("/") {
+            post("/info") {
+                val json = call.receiveText()
+                val person = gson.fromJson(json, Person::class.java)
+                DataStore.cache.add(person)
+                call.respondText("OK\n")
+            }
+            post("/form") {
+                val parameters = call.receiveParameters()
+                val person = Person(
+                        parameters["name"]!!, parameters["email"], parameters["phone_number"]
+                )
+                DataStore.cache.add(person)
+                call.respondRedirect("/list")
+            }
+            get("/all") {
+                call.respond(gson.toJson(DataStore.cache))
+            }
+            get("/list") {
                 call.respondText(createHTML(prettyPrint = true)
                         .body {
                             h1 { +"Draw Submissions" }
@@ -29,14 +45,8 @@ fun main(args: Array<String>) {
                             script(type = "text/javascript", src = "js/frontend_main.js")
                         }, ContentType.Text.Html)
             }
-            post("/info") {
-                val json = call.receiveText()
-                val person = gson.fromJson(json, Person::class.java)
-                DataStore.cache.add(person)
-                call.respondText("OK\n")
-            }
-            get("/all") {
-                call.respond(gson.toJson(DataStore.cache))
+            static {
+                defaultResource("form.html", "html")
             }
             static("js") {
                 staticRootFolder = File("./frontend")

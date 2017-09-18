@@ -45,7 +45,7 @@ data class Person(
 fun Person.toHtml() = createHTML().div {
     span {
         b { +name }
-        email?.let { i { +it } }
-        phoneNumber?.let { span { +it } }
+        email?.let { i { +" $it" } }
+        phoneNumber?.let { span { +" $it" } }
     }
 }
