@@ -29,14 +29,15 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile "org.jetbrains.ktor:ktor-core:$ktor_version" // ADDED
-    compile "org.jetbrains.ktor:ktor-netty:$ktor_version" // ADDED
+    compile "org.jetbrains.ktor:ktor-core:$ktor_version"
+    compile "org.jetbrains.ktor:ktor-netty:$ktor_version"
     compile "org.jetbrains.kotlinx:kotlinx-html-jvm:${kotlinx_html_version}"
-    compile "ch.qos.logback:logback-classic:1.2.1" // ADDED
-    compile "com.google.code.gson:gson:2.8.1" // ADDED
+    compile "ch.qos.logback:logback-classic:1.2.1"
+
+    compile project(":shared")
 }
 
-// ADDED
+// ADDED -- needed for ktor
 kotlin {
     experimental {
         coroutines "enable"

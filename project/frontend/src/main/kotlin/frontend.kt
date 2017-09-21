@@ -1,3 +1,4 @@
+import com.brentwatson.droidcon2017.shared.Person
 import kotlin.browser.*
 import kotlinx.html.*
 import kotlinx.html.dom.*
@@ -35,12 +36,6 @@ fun getData(displayData: (people: List<Person>) -> Unit) {
         send()
     }
 }
-
-data class Person(
-        val name: String,
-        val email: String?,
-        val phoneNumber: String?
-)
 
 fun Person.toHtml() = createHTML().div {
     span {

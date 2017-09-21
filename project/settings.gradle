@@ -1,1 +1,6 @@
 rootProject.name = 'project'
+include 'native'
+include 'shared'
+include 'server'
+include 'frontend'
+

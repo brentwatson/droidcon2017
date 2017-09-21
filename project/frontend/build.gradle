@@ -24,6 +24,8 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
     compile "org.jetbrains.kotlinx:kotlinx-html-js:$kotlinx_html_version"
+
+    compile project(":shared")
 }
 
 // ADDED -- from https://kotlinlang.org/docs/tutorials/javascript/getting-started-gradle/getting-started-with-gradle.html

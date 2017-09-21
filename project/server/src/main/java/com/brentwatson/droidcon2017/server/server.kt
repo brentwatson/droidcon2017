@@ -1,5 +1,5 @@
 import com.brentwatson.droidcon2017.server.DataStore
-import com.brentwatson.droidcon2017.server.Person
+import com.brentwatson.droidcon2017.shared.Person
 import com.google.gson.Gson
 import org.jetbrains.ktor.host.*
 import kotlinx.html.*
@@ -11,18 +11,23 @@ import org.jetbrains.ktor.request.receiveParameters
 import org.jetbrains.ktor.request.receiveText
 import org.jetbrains.ktor.response.*
 import org.jetbrains.ktor.routing.*
-import org.jetbrains.ktor.util.raw
 import java.io.File
 
 fun main(args: Array<String>) {
     val gson = Gson()
     val server = embeddedServer(Netty, port = 8080) {
         routing {
+            static {
+                defaultResource("form.html", "html")
+            }
             post("/info") {
                 val json = call.receiveText()
                 val person = gson.fromJson(json, Person::class.java)
                 DataStore.cache.add(person)
                 call.respondText("OK\n")
+            }
+            get("/all") {
+                call.respond(gson.toJson(DataStore.cache))
             }
             post("/form") {
                 val parameters = call.receiveParameters()
@@ -31,9 +36,6 @@ fun main(args: Array<String>) {
                 )
                 DataStore.cache.add(person)
                 call.respondRedirect("/list")
-            }
-            get("/all") {
-                call.respond(gson.toJson(DataStore.cache))
             }
             get("/list") {
                 call.respondText(createHTML(prettyPrint = true)
@@ -45,8 +47,14 @@ fun main(args: Array<String>) {
                             script(type = "text/javascript", src = "js/frontend_main.js")
                         }, ContentType.Text.Html)
             }
-            static {
-                defaultResource("form.html", "html")
+            get("/dump") {
+                File("./server/dump/dump.txt")
+                        .writeText(
+                                DataStore.cache.joinToString("\n") {
+                                    with(it) { "$name $email $phoneNumber" }
+                                }
+                        )
+                call.respondText("OK")
             }
             static("js") {
                 staticRootFolder = File("./frontend")
