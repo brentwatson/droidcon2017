@@ -29,6 +29,8 @@ build/
 .gradle/
 out/
 project/frontend/web/
+kobaltBuild/
+.kobalt/
 
 # IDE files
 .idea/
