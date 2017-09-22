@@ -1,0 +1,2 @@
+headers = time.h
+compilerOpts = -D_ANSI_SOURCE

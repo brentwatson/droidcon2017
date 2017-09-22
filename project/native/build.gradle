@@ -17,11 +17,15 @@ konanInterop {
     stdio {
         defFile 'src/main/c_interop/stdio.def'
     }
+    time {
+        defFile 'src/main/c_interop/time.def'
+    }
 }
 
 konanArtifacts {
     WinnerChooser {
         inputFiles fileTree("src/main/kotlin")
         useInterop 'stdio'
+        useInterop 'time'
     }
 }
