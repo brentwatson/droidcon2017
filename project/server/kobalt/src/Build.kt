@@ -31,6 +31,7 @@ val shared = project {
     }
 }
 
+// Build using ./kobalt assemble
 val server = project(shared) {
     name = "server"
     group = "com.brentwatson.droidcon2017"
@@ -57,5 +58,10 @@ val server = project(shared) {
 
     kotlinCompiler {
         args("-jvm-target", "1.8")
+    }
+
+    // Run server with `kobaltw run`
+    application {
+        mainClass = "ServerKt"
     }
 }

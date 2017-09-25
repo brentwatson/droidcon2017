@@ -19,27 +19,35 @@ fun main(args: Array<String>) {
         routing {
             static {
                 defaultResource("form.html", "html")
+            } // "/" path
+            post("/form") {
+                val parameters = call.receiveParameters()
+                if (parameters["name"].isNullOrBlank()) {
+                    call.respondRedirect("/")
+                    return@post
+                }
+                val person = Person(
+                        parameters["name"]!!,
+                        parameters["email"],
+                        parameters["phone_number"]
+                )
+                DataStore.cache.add(person)
+                call.respondRedirect("/list")
             }
             post("/info") {
                 val json = call.receiveText()
-                val person = gson.fromJson(json, Person::class.java)
-                DataStore.cache.add(person)
+                gson.fromJson<Person>(json)?.let { person ->
+                    DataStore.cache.add(person)
+                }
                 call.respondText("OK\n")
             }
             get("/all") {
                 call.respond(gson.toJson(DataStore.cache))
             }
-            post("/form") {
-                val parameters = call.receiveParameters()
-                val person = Person(
-                        parameters["name"]!!, parameters["email"], parameters["phone_number"]
-                )
-                DataStore.cache.add(person)
-                call.respondRedirect("/list")
-            }
             get("/list") {
                 call.respondText(createHTML(prettyPrint = true)
                         .body {
+                            style { unsafe { raw("span {margin-bottom: 3px; display: inline-block;}") } }
                             h1 { +"Draw Submissions" }
                             div { id = "submissions" }
                             script(type = "text/javascript", src = "js/kotlin.js")
@@ -48,7 +56,7 @@ fun main(args: Array<String>) {
                         }, ContentType.Text.Html)
             }
             get("/dump") {
-                File("./server/dump/dump.txt")
+                File("./dump/dump.txt")
                         .writeText(
                                 DataStore.cache.joinToString("\n") {
                                     with(it) { "$name $email $phoneNumber" }
@@ -64,3 +72,6 @@ fun main(args: Array<String>) {
     }
     server.start(wait = true)
 }
+
+private inline fun <reified T> Gson.fromJson(json: String): T? =
+        this.fromJson(json, T::class.java)

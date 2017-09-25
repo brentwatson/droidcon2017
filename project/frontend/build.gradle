@@ -3,7 +3,7 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     ext.kotlin_version = '1.1.4-2'
-    ext.kotlinx_html_version = "0.6.4" //ADDED
+    ext.kotlinx_html_version = "0.6.4"
 
     repositories {
         mavenCentral()
@@ -18,7 +18,7 @@ apply plugin: 'kotlin2js'
 repositories {
     mavenCentral()
     jcenter()
-    maven { url "https://dl.bintray.com/kotlin/kotlinx" }  // ADDED
+    maven { url "https://dl.bintray.com/kotlin/kotlinx" }
 }
 
 dependencies {
@@ -28,7 +28,7 @@ dependencies {
     compile project(":shared")
 }
 
-// ADDED -- from https://kotlinlang.org/docs/tutorials/javascript/getting-started-gradle/getting-started-with-gradle.html
+// Taken from https://kotlinlang.org/docs/tutorials/javascript/getting-started-gradle/getting-started-with-gradle.html
 /**
  * Output files to `web` dir during build step
  */

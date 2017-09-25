@@ -39,5 +39,6 @@ fun main(args: Array<String>) {
     srand(time(null).toInt())
     val randIndex = rand() % lines.size
     println(randIndex)
+
     println(lines[randIndex])
 }
